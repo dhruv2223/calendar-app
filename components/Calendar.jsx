@@ -2,10 +2,17 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../Services/fetchEvents";
 import DayBlock from "./DayBlock";
-
+import { EventModal } from "./EventModal";
 export const Calendar = () => {
   const [dates, setDates] = useState([]);
-
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [customEvents, setCustomEvents] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleDayClick = (date) => {
+    console.log("clicked");
+    setIsModalOpen(true);
+    setSelectedDate(date);
+  };
   const {
     data: events = [],
     isLoading,
@@ -36,6 +43,9 @@ export const Calendar = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading events...</div>;
+  const handleSaveEvent = (eventName, eventDate) => {
+    setCustomEvents([...customEvents, { name: eventName, date: eventDate }]);
+  };
 
   return (
     <div className="grid grid-cols-7 gap-2 p-10">
@@ -46,8 +56,20 @@ export const Calendar = () => {
       ))}
 
       {dates.map((date, index) => (
-        <DayBlock key={index} date={date} events={events} />
+        <DayBlock
+          customEvents={customEvents}
+          key={index}
+          date={date}
+          events={events}
+          onClick={() => handleDayClick(date)}
+        />
       ))}
+      <EventModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveEvent}
+        selectedDate={selectedDate}
+      ></EventModal>
     </div>
   );
 };
