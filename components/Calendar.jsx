@@ -18,6 +18,9 @@ export const Calendar = () => {
     isLoading,
     error,
   } = useQuery(["events"], fetchEvents);
+  const handleDeleteEvent = (eventToDelete) => {
+    setCustomEvents(customEvents.filter((event) => event !== eventToDelete));
+  };
 
   useEffect(() => {
     const startDay = 1;
@@ -62,6 +65,7 @@ export const Calendar = () => {
           date={date}
           events={events}
           onClick={() => handleDayClick(date)}
+          handleDeleteEvent={handleDeleteEvent}
         />
       ))}
       <EventModal

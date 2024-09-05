@@ -1,6 +1,14 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-const DayBlock = ({ date, events, onClick, customEvents }) => {
+const DayBlock = ({
+  date,
+  events,
+  onClick,
+  customEvents,
+  handleDeleteEvent,
+}) => {
   const dayEvents = events?.data?.response?.holidays?.filter((event) => {
     const eventDate = new Date(event.date.iso).getDate();
     const eventMonth = new Date(event.date.iso).getMonth() + 1;
@@ -25,9 +33,11 @@ const DayBlock = ({ date, events, onClick, customEvents }) => {
               return null;
             } else {
               return (
-                <div key={index}>
+                <div key={index} className="flex justify-between">
                   <div key={index}>{event.name}</div>
-                  <div></div>
+                  <div onClick={() => handleDeleteEvent(event)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </div>
                 </div>
               );
             }
