@@ -13,14 +13,22 @@ export const Calendar = () => {
   } = useQuery(["events"], fetchEvents);
 
   useEffect(() => {
-    const daysInMonth = 31; // Static for now, you will handle dynamic month logic later
-    const firstDayOffset = 1; // Assuming Jan 1st starts on Monday (customize later)
-    const totalDays = 35; // Total grid blocks (7 days x 5 weeks)
+    const startDay = 1;
+    const totalDays = 31; // Total days in January
+    const totalBlocks = 35; // 5 rows x 7 columns for grid layout (may include empty slots)
+    const days = [];
 
-    const days = new Array(totalDays).fill(null);
+    for (let i = 0; i < startDay; i++) {
+      days.push(null);
+    }
 
-    for (let i = firstDayOffset; i < firstDayOffset + daysInMonth; i++) {
-      days[i] = i - firstDayOffset + 1;
+    // Fill the actual days of January
+    for (let i = 1; i <= totalDays; i++) {
+      days.push(i);
+    }
+
+    while (days.length < totalBlocks) {
+      days.push(null);
     }
 
     setDates(days);
