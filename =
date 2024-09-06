@@ -15,11 +15,9 @@ export const Calendar = () => {
   };
 
   useEffect(() => {
-    console.log("setting up the local storage");
     localStorage.setItem("customEvents", JSON.stringify(customEvents));
   }, [customEvents]);
   useEffect(() => {
-    console.log("reading local storage");
     const savedEvents = localStorage.getItem("customEvents");
     if (savedEvents) {
       setCustomEvents(JSON.parse(savedEvents));

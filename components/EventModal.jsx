@@ -5,6 +5,7 @@ export const EventModal = ({ isOpen, selectedDate, onClose, onSave }) => {
   if (!isOpen) return null;
   const handleSave = () => {
     onSave(eventName, selectedDate);
+    setEventName("");
     onClose();
   };
   return ReactDOM.createPortal(
