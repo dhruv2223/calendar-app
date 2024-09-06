@@ -4,6 +4,8 @@ import { fetchEvents } from "../Services/fetchEvents";
 import DayBlock from "./DayBlock";
 import { EventModal } from "./EventModal";
 export const Calendar = () => {
+  const [currentMonth, setCurrentMonth] = useState(0);
+  const [currentYear, setCurrentYear] = useState(2019);
   const [dates, setDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [customEvents, setCustomEvents] = useState([]);
@@ -12,6 +14,19 @@ export const Calendar = () => {
     console.log("clicked");
     setIsModalOpen(true);
     setSelectedDate(date);
+  };
+  const handleNextMonth = () => {
+    currentMonth === 11
+      ? setCurrentMonth(0)
+      : setCurrentMonth(currentMonth + 1);
+  };
+  const handlePreviousMonth = () => {
+    currentMonth === 0
+      ? setCurrentMonth(11)
+      : setCurrentMonth(currentMonth - 1);
+  };
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month + 1, 0).getDate();
   };
 
   useEffect(() => {
@@ -35,12 +50,12 @@ export const Calendar = () => {
   };
 
   useEffect(() => {
-    const startDay = 1;
-    const totalDays = 31; // Total days in January
-    const totalBlocks = 35; // 5 rows x 7 columns for grid layout (may include empty slots)
+    const totalDays = getDaysInMonth(currentMonth, currentYear);
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+    const totalBlocks = 35;
     const days = [];
 
-    for (let i = 0; i < startDay; i++) {
+    for (let i = 0; i < firstDayOfMonth; i++) {
       days.push(null);
     }
 
@@ -54,7 +69,7 @@ export const Calendar = () => {
     }
 
     setDates(days);
-  }, []);
+  }, [currentMonth, currentYear]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading events...</div>;
@@ -63,29 +78,46 @@ export const Calendar = () => {
   };
 
   return (
-    <div className="grid grid-cols-7 gap-2 p-10">
-      {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((day) => (
-        <div key={day} className="text-center font-bold bg-yellow-200">
-          {day}
+    <div>
+      <div className="flex justify-between p-4">
+        <button onClick={handlePreviousMonth} className="bg-gray-200 p-2">
+          Previous Month
+        </button>
+        <div className="text-lg font-bold">
+          {new Date(currentYear, currentMonth).toLocaleString("default", {
+            month: "long",
+          })}{" "}
+          {currentYear}
         </div>
-      ))}
+        <button onClick={handleNextMonth} className="bg-gray-200 p-2">
+          Next Month
+        </button>
+      </div>
+      <div className="grid grid-cols-7 gap-2 p-10">
+        {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((day) => (
+          <div key={day} className="text-center font-bold bg-yellow-200">
+            {day}
+          </div>
+        ))}
 
-      {dates.map((date, index) => (
-        <DayBlock
-          customEvents={customEvents}
-          key={index}
-          date={date}
-          events={events}
-          onClick={() => handleDayClick(date)}
-          handleDeleteEvent={handleDeleteEvent}
-        />
-      ))}
-      <EventModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSaveEvent}
-        selectedDate={selectedDate}
-      ></EventModal>
+        {dates.map((date, index) => (
+          <DayBlock
+            customEvents={customEvents}
+            key={index}
+            date={date}
+            events={events}
+            onClick={() => handleDayClick(date)}
+            handleDeleteEvent={handleDeleteEvent}
+            currentMonth={currentMonth}
+          />
+        ))}
+        <EventModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSaveEvent}
+          selectedDate={selectedDate}
+        ></EventModal>
+      </div>
     </div>
   );
 };

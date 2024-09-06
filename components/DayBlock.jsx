@@ -8,11 +8,12 @@ const DayBlock = ({
   onClick,
   customEvents,
   handleDeleteEvent,
+  currentMonth,
 }) => {
   const dayEvents = events?.data?.response?.holidays?.filter((event) => {
     const eventDate = new Date(event.date.iso).getDate();
     const eventMonth = new Date(event.date.iso).getMonth() + 1;
-    return eventDate === date && eventMonth === 1;
+    return eventDate === date && eventMonth === currentMonth + 1;
   });
 
   return (
