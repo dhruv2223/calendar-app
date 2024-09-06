@@ -1,7 +1,17 @@
 import ReactDOM from "react-dom";
 import { useState } from "react";
-export const EventModal = ({ isOpen, selectedDate, onClose, onSave }) => {
+export const EventModal = ({
+  isOpen,
+  selectedDate,
+  onClose,
+  onSave,
+  currentMonth,
+  currentYear,
+}) => {
   const [eventName, setEventName] = useState("");
+  const month = new Date(currentYear, currentMonth).toLocaleString("default", {
+    month: "long",
+  });
   if (!isOpen) return null;
   const handleSave = () => {
     onSave(eventName, selectedDate);
@@ -11,7 +21,9 @@ export const EventModal = ({ isOpen, selectedDate, onClose, onSave }) => {
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50">
       <div className="bg-white p-4 rounded shadow-lg">
-        <h2 className="text-lg">Add Events for {selectedDate} </h2>
+        <h2 className="text-lg">
+          Add Events for {selectedDate} {month}{" "}
+        </h2>
         <input
           placeholder="Event Name"
           type="text"

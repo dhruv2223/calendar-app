@@ -86,7 +86,7 @@ export const Calendar = () => {
         <div className="text-lg font-bold">
           {new Date(currentYear, currentMonth).toLocaleString("default", {
             month: "long",
-          })}{" "}
+          })}
           {currentYear}
         </div>
         <button onClick={handleNextMonth} className="bg-gray-200 p-2">
@@ -116,6 +116,8 @@ export const Calendar = () => {
           onClose={() => setIsModalOpen(false)}
           onSave={handleSaveEvent}
           selectedDate={selectedDate}
+          currentYear={currentYear}
+          currentMonth={currentMonth}
         ></EventModal>
       </div>
     </div>
