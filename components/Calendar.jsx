@@ -30,16 +30,18 @@ export const Calendar = () => {
   };
 
   useEffect(() => {
-    console.log("setting up the local storage");
-    localStorage.setItem("customEvents", JSON.stringify(customEvents));
-  }, [customEvents]);
-  useEffect(() => {
-    console.log("reading local storage");
     const savedEvents = localStorage.getItem("customEvents");
     if (savedEvents) {
       setCustomEvents(JSON.parse(savedEvents));
+      console.log("Loaded events:", JSON.parse(savedEvents));
     }
   }, []);
+  useEffect(() => {
+    console.log("Saving customEvents to localStorage", customEvents);
+    if (customEvents.length > 0) {
+      localStorage.setItem("customEvents", JSON.stringify(customEvents));
+    }
+  }, [customEvents]);
   const {
     data: events = [],
     isLoading,
@@ -79,7 +81,7 @@ export const Calendar = () => {
 
   return (
     <div>
-      <div className="flex justify-between p-4">
+      <div className="flex justify-between p-7">
         <button onClick={handlePreviousMonth} className="bg-gray-200 p-2">
           Previous Month
         </button>
