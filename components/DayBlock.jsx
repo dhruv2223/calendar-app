@@ -23,11 +23,6 @@ const DayBlock = ({
     >
       <div className="text-sm">{date || ""}</div>
       <div>
-        <div className="text-xs text-red-500">
-          {dayEvents.map((event, index) => {
-            return <div key={index}>{event.name}</div>;
-          })}
-        </div>
         <div className="text-xs text-black">
           {customEvents.map((event, index) => {
             if (date != event.date) {

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../Services/fetchEvents";
 import DayBlock from "./DayBlock";
 import { EventModal } from "./EventModal";
 export const Calendar = () => {
+  const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(0);
   const [currentYear, setCurrentYear] = useState(2019);
   const [dates, setDates] = useState([]);
@@ -42,11 +44,6 @@ export const Calendar = () => {
       localStorage.setItem("customEvents", JSON.stringify(customEvents));
     }
   }, [customEvents]);
-  const {
-    data: events = [],
-    isLoading,
-    error,
-  } = useQuery(["events"], fetchEvents);
   const handleDeleteEvent = (eventToDelete) => {
     setCustomEvents(customEvents.filter((event) => event !== eventToDelete));
   };
@@ -73,12 +70,12 @@ export const Calendar = () => {
     setDates(days);
   }, [currentMonth, currentYear]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading events...</div>;
   const handleSaveEvent = (eventName, eventDate) => {
     setCustomEvents([...customEvents, { name: eventName, date: eventDate }]);
   };
-
+  const handleDoubleClick = (day, currentMonth, currentYear) => {
+    navigate(`/pomodoro/${day}/${currentMonth}/${currentYear}`); // Redirect to the pomodoro page
+  };
   return (
     <div>
       <div className="flex justify-between p-7">
@@ -104,11 +101,13 @@ export const Calendar = () => {
 
         {dates.map((date, index) => (
           <DayBlock
+            onDoubleClick={() => {
+              handleDoubleClick(date, currentMonth, currentYear);
+            }}
             customEvents={customEvents}
             key={index}
             date={date}
-            events={events}
-            onClick={() => handleDayClick(date)}
+            onClick={() => handleDayClick(date, currentMonth, currentYear)}
             handleDeleteEvent={handleDeleteEvent}
             currentMonth={currentMonth}
           />
